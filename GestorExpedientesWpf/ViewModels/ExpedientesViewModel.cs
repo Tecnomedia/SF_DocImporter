@@ -42,6 +42,8 @@ namespace GestorExpedientesWpf.ViewModels
         private ICommand? _zoomOutCommand;
         private ICommand? _zoomResetCommand;
         private ICommand? _toggleVisorCommand;
+        private ICommand? _limpiarFiltroMutuaCommand;
+        private ICommand? _limpiarFiltroNombrePacienteCommand;
 
         private bool _ignorarDocumentosConRemesa;
         private bool _mostrarSoloDocumentosHuerfanos;
@@ -276,6 +278,9 @@ namespace GestorExpedientesWpf.ViewModels
         public ICommand ZoomOutCommand => _zoomOutCommand ??= new RelayCommand(_ => UiScale -= UiScaleStep);
         public ICommand ZoomResetCommand => _zoomResetCommand ??= new RelayCommand(_ => UiScale = 1.0);
         public ICommand ToggleVisorCommand => _toggleVisorCommand ??= new RelayCommand(_ => IsVisorColapsado = !IsVisorColapsado);
+
+        public ICommand LimpiarFiltroMutuaCommand => _limpiarFiltroMutuaCommand ??= new RelayCommand(_ => FiltroMutua = string.Empty);
+        public ICommand LimpiarFiltroNombrePacienteCommand => _limpiarFiltroNombrePacienteCommand ??= new RelayCommand(_ => FiltroNombrePaciente = string.Empty);
 
         #endregion
 

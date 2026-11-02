@@ -98,6 +98,44 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Botón "x" dentro de las cajas de filtro: solo se ve cuando hay texto (Tag = texto del filtro) -->
+        <Style x:Key="BotonLimpiarFiltroStyle" TargetType="Button">
+            <Setter Property="Content" Value="&#x2715;"/>
+            <Setter Property="ToolTip" Value="Borrar filtro"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource AppBorderBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Tag" Value="{x:Null}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </Window.Resources>
 
     <Grid>
@@ -145,11 +183,13 @@
                             <ColumnDefinition Width="*" MaxWidth="260"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Coberturas:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource TextSecondaryBrush}"/>
-                        <TextBox Grid.Column="1" x:Name="txtMutuas" VerticalAlignment="Center"
+                        <TextBox Grid.Column="1" x:Name="txtMutuas" VerticalAlignment="Center" Padding="8,6,26,6"
                                  Text="{Binding FiltroMutua, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  TextChanged="txtMutuas_TextChanged"
                                  KeyDown="txtMutuas_KeyDown"
                                  MouseDoubleClick="txtMutuas_MouseDoubleClick"/>
+                        <Button Grid.Column="1" Style="{StaticResource BotonLimpiarFiltroStyle}"
+                                Tag="{Binding FiltroMutua}" Command="{Binding LimpiarFiltroMutuaCommand}"/>
                         <Popup Grid.Column="1" x:Name="popupMutuas"
                                PlacementTarget="{Binding ElementName=txtMutuas}"
                                Placement="Bottom" IsOpen="False" StaysOpen="False">
@@ -161,9 +201,11 @@
                             </Border>
                         </Popup>
                         <TextBlock Grid.Column="2" Text="Nombre Paciente:" VerticalAlignment="Center" Margin="16,0,6,0" Foreground="{StaticResource TextSecondaryBrush}"/>
-                        <TextBox Grid.Column="3" VerticalAlignment="Center"
+                        <TextBox Grid.Column="3" VerticalAlignment="Center" Padding="8,6,26,6"
                                  ToolTip="Filtra por nombre del paciente, sin distinguir mayúsculas ni acentos"
                                  Text="{Binding FiltroNombrePaciente, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Grid.Column="3" Style="{StaticResource BotonLimpiarFiltroStyle}"
+                                Tag="{Binding FiltroNombrePaciente}" Command="{Binding LimpiarFiltroNombrePacienteCommand}"/>
                     </Grid>
 
                     <!-- Sub-fila B: Modos de filtrado -->

@@ -47,6 +47,8 @@ namespace GestorRemesasWpf.ViewModels
         private ICommand? _zoomOutCommand;
         private ICommand? _zoomResetCommand;
         private ICommand? _toggleVisorCommand;
+        private ICommand? _limpiarFiltroMutuaCommand;
+        private ICommand? _limpiarFiltroNombrePacienteCommand;
 
         private Expediente? _selectedExpediente;
 
@@ -263,6 +265,9 @@ namespace GestorRemesasWpf.ViewModels
         public ICommand ZoomOutCommand => _zoomOutCommand ??= new RelayCommand(() => UiScale -= UiScaleStep);
         public ICommand ZoomResetCommand => _zoomResetCommand ??= new RelayCommand(() => UiScale = 1.0);
         public ICommand ToggleVisorCommand => _toggleVisorCommand ??= new RelayCommand(() => IsVisorColapsado = !IsVisorColapsado);
+
+        public ICommand LimpiarFiltroMutuaCommand => _limpiarFiltroMutuaCommand ??= new RelayCommand(() => FiltroMutua = string.Empty);
+        public ICommand LimpiarFiltroNombrePacienteCommand => _limpiarFiltroNombrePacienteCommand ??= new RelayCommand(() => FiltroNombrePaciente = string.Empty);
 
         private async void Actualizar()
         {
