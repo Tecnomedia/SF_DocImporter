@@ -275,14 +275,21 @@
                                     Background="{StaticResource PrimaryBrush}" Foreground="White" Click="Button_Click"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                            <TextBlock Text="Cobertura:" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
-                            <TextBox x:Name="txtMutuas" Width="400" VerticalAlignment="Center" HorizontalAlignment="Left"
+                        <!-- Filtros de texto: las cajas se encogen si falta ancho (visor abierto, zoom) -->
+                        <Grid Margin="0,6,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*" MaxWidth="400"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*" MaxWidth="400"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Cobertura:" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBox Grid.Column="1" x:Name="txtMutuas" VerticalAlignment="Center"
                                      Text="{Binding FiltroMutua, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      KeyDown="txtMutuas_KeyDown"
                                      MouseDoubleClick="txtMutuas_MouseDoubleClick"
                                      TextChanged="txtMutuas_TextChanged"/>
-                            <Popup x:Name="popupMutuas"
+                            <Popup Grid.Column="1" x:Name="popupMutuas"
                                    PlacementTarget="{Binding ElementName=txtMutuas}"
                                    Placement="Bottom" IsOpen="False" StaysOpen="False">
                                 <Border Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6">
@@ -296,7 +303,14 @@
                                              MaxHeight="200"/>
                                 </Border>
                             </Popup>
-                            <CheckBox Content="Mostrar solo documentos huérfanos" IsChecked="{Binding MostrarSoloDocumentosHuerfanos}" Margin="20,0,16,0" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="2" Text="Nombre Paciente:" Margin="20,0,8,0" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBox Grid.Column="3" VerticalAlignment="Center"
+                                     ToolTip="Filtra por nombre del paciente, sin distinguir mayúsculas ni acentos"
+                                     Text="{Binding FiltroNombrePaciente, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                            <CheckBox Content="Mostrar solo documentos huérfanos" IsChecked="{Binding MostrarSoloDocumentosHuerfanos}" Margin="0,0,16,0" VerticalAlignment="Center"/>
                             <CheckBox Content="Ignorar documentos con remesa" IsChecked="{Binding IgnorarDocumentosConRemesa}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>

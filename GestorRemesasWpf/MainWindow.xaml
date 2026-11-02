@@ -136,15 +136,21 @@
                         <Button Content="Borrar" Margin="8,0,0,0" Width="100" Background="{StaticResource DangerBrush}" Foreground="White" Command="{Binding BorrarExpedientesCommand}"/>
                     </StackPanel>
 
-                    <!-- Sub-fila A: Coberturas + Modos de filtrado en la misma linea -->
-                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="Coberturas:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource TextSecondaryBrush}"/>
-                        <TextBox x:Name="txtMutuas" Width="260" VerticalAlignment="Center" HorizontalAlignment="Left"
+                    <!-- Sub-fila A: filtros de texto (las cajas se encogen si falta ancho) -->
+                    <Grid Margin="0,6,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" MaxWidth="260"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" MaxWidth="260"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Coberturas:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBox Grid.Column="1" x:Name="txtMutuas" VerticalAlignment="Center"
                                  Text="{Binding FiltroMutua, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  TextChanged="txtMutuas_TextChanged"
                                  KeyDown="txtMutuas_KeyDown"
                                  MouseDoubleClick="txtMutuas_MouseDoubleClick"/>
-                        <Popup x:Name="popupMutuas"
+                        <Popup Grid.Column="1" x:Name="popupMutuas"
                                PlacementTarget="{Binding ElementName=txtMutuas}"
                                Placement="Bottom" IsOpen="False" StaysOpen="False">
                             <Border Background="White" BorderBrush="{StaticResource AppBorderBrush}" BorderThickness="1" CornerRadius="6">
@@ -154,7 +160,15 @@
                                          MaxHeight="200"/>
                             </Border>
                         </Popup>
-                        <RadioButton Content="Todos" GroupName="RemesaFilter" Margin="16,0,0,0" VerticalAlignment="Center" IsChecked="{Binding RemesaFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:RemesaFilter.Todos}}"/>
+                        <TextBlock Grid.Column="2" Text="Nombre Paciente:" VerticalAlignment="Center" Margin="16,0,6,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBox Grid.Column="3" VerticalAlignment="Center"
+                                 ToolTip="Filtra por nombre del paciente, sin distinguir mayúsculas ni acentos"
+                                 Text="{Binding FiltroNombrePaciente, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+
+                    <!-- Sub-fila B: Modos de filtrado -->
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0" VerticalAlignment="Center">
+                        <RadioButton Content="Todos" GroupName="RemesaFilter" VerticalAlignment="Center" IsChecked="{Binding RemesaFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:RemesaFilter.Todos}}"/>
                         <RadioButton Content="Sin Remesa" GroupName="RemesaFilter" Margin="10,0,0,0" VerticalAlignment="Center" IsChecked="{Binding RemesaFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:RemesaFilter.SinRemesa}}"/>
                         <RadioButton Content="Con Remesa" GroupName="RemesaFilter" Margin="10,0,0,0" VerticalAlignment="Center" IsChecked="{Binding RemesaFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:RemesaFilter.ConRemesa}}"/>
                         <CheckBox Content="Solo huérfanos" IsChecked="{Binding IsOrphanFilter, Mode=TwoWay}" Margin="16,0,0,0" VerticalAlignment="Center"/>

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,6 +57,7 @@ namespace GestorExpedientesWpf.ViewModels
         private bool _asegurarTriplete;
         private bool _editMetadataMode;
         private string _filtroMutua;
+        private string _filtroNombrePaciente;
 
         #endregion
 
@@ -182,6 +184,17 @@ namespace GestorExpedientesWpf.ViewModels
             {
                 _filtroMutua = value;
                 OnPropertyChanged(nameof(FiltroMutua));
+                FiltrarExpedientes();
+            }
+        }
+
+        public string FiltroNombrePaciente
+        {
+            get => _filtroNombrePaciente;
+            set
+            {
+                _filtroNombrePaciente = value;
+                OnPropertyChanged(nameof(FiltroNombrePaciente));
                 FiltrarExpedientes();
             }
         }
@@ -385,7 +398,10 @@ namespace GestorExpedientesWpf.ViewModels
                 bool pasaFiltroRemesa = !IgnorarDocumentosConRemesa || string.IsNullOrEmpty(expediente!.Remesa);
                 bool pasaFiltroHuerfanos = !MostrarSoloDocumentosHuerfanos || expediente!.IsOrphan;
                 bool pasaFiltroMutua = string.IsNullOrEmpty(FiltroMutua) || expediente!.Cobertura.Contains(FiltroMutua, StringComparison.OrdinalIgnoreCase);
-                return pasaFiltroRemesa && pasaFiltroHuerfanos && pasaFiltroMutua;
+                // Sin distinguir acentos: "garcia" encuentra "GARCÍA"
+                bool pasaFiltroNombrePaciente = string.IsNullOrWhiteSpace(FiltroNombrePaciente) ||
+                    CultureInfo.InvariantCulture.CompareInfo.IndexOf(expediente!.NombrePaciente, FiltroNombrePaciente.Trim(), CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace) >= 0;
+                return pasaFiltroRemesa && pasaFiltroHuerfanos && pasaFiltroMutua && pasaFiltroNombrePaciente;
             };
 
             ExpedientesView = collectionView;

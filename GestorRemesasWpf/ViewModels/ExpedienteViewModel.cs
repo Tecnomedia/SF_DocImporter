@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -30,6 +31,7 @@ namespace GestorRemesasWpf.ViewModels
         private ObservableCollection<Expediente> _expedientes;
         private string _mutuaSeleccionada;
         private string _filtroMutua;
+        private string _filtroNombrePaciente;
         private RemesaFilter _remesaFilter;
         private bool _isOrphanFilter;
         private string _nombreArchivo;
@@ -87,6 +89,17 @@ namespace GestorRemesasWpf.ViewModels
             {
                 _filtroMutua = value;
                 OnPropertyChanged(nameof(FiltroMutua));
+                FiltrarExpedientes();
+            }
+        }
+
+        public string FiltroNombrePaciente
+        {
+            get => _filtroNombrePaciente;
+            set
+            {
+                _filtroNombrePaciente = value;
+                OnPropertyChanged(nameof(FiltroNombrePaciente));
                 FiltrarExpedientes();
             }
         }
@@ -566,6 +579,9 @@ namespace GestorRemesasWpf.ViewModels
                 var exp = (Expediente)expediente;
                 //bool mutuaMatch = string.IsNullOrEmpty(_mutuaSeleccionada) || exp.Cobertura == _mutuaSeleccionada;
                 bool filtroMutuaMatch = string.IsNullOrEmpty(_filtroMutua) || exp.Cobertura.Contains(_filtroMutua, StringComparison.OrdinalIgnoreCase);
+                // Sin distinguir acentos: "garcia" encuentra "GARCÍA"
+                bool filtroNombrePacienteMatch = string.IsNullOrWhiteSpace(_filtroNombrePaciente) ||
+                    CultureInfo.InvariantCulture.CompareInfo.IndexOf(exp.NombrePaciente, _filtroNombrePaciente.Trim(), CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace) >= 0;
                 bool isOrphanMatch = !_isOrphanFilter || exp.IsOrphan;
                 bool isFacturaMatch = !_isFacturaFilter || exp.TipoDoc == "Factura";
                 bool remesaMatch = _remesaFilter switch
@@ -578,7 +594,7 @@ namespace GestorRemesasWpf.ViewModels
                 bool facturaArchivoMatch = !_mostrarSoloFacturasDelArchivo || (FacturasCargadas != null && FacturasCargadas.Contains(exp.NoFactura));
                 
                 //return mutuaMatch && filtroMutuaMatch && remesaMatch && isOrphanMatch && isFacturaMatch && facturaArchivoMatch;
-                return filtroMutuaMatch && remesaMatch && isOrphanMatch && isFacturaMatch && facturaArchivoMatch;
+                return filtroMutuaMatch && filtroNombrePacienteMatch && remesaMatch && isOrphanMatch && isFacturaMatch && facturaArchivoMatch;
             };
             ExpedientesFiltrados.Refresh();            
         }
